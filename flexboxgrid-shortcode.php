@@ -7,34 +7,38 @@ Version: 1.0
 License: 
 */
 
-	//add_action('wp_footer', 'bpm_site_funk');
-	function bpm_site_funk() {
-		if( !is_admin()){ 
-			wp_enqueue_style('bpm-site-function-css', plugin_dir_url(__FILE__) . 'css/bpm-site-function.css');
-		}
-	}	
-
-	//add_action('wp_footer', 'bpm_site_scripts');
-	function bpm_site_scripts() {
-		if( !is_admin()){ 
-			wp_enqueue_script('bpm-site-function-js', plugin_dir_url(__FILE__) . 'js/bpm-site-function.js', array('jquery'), '', true );
-		}
-	}
-
-	// Shortcodes
-	require plugin_dir_path( __FILE__ ) . 'shortcodes/typography_shortcodes.php';
-
-
 
 	add_shortcode( 'row', 'bpm_flexbox_row_shortcode' );
 	function bpm_flexbox_row_shortcode($atts, $content = null) {
 
+		/**
+		 * OPTIONAL MODULE STYLE
+		 *
+		 */
+		if ( !defined('bpm___flexboxgrid_shortcode_row_style___defined') ){
+			function bpm___flexboxgrid_shortcode_row_style(){
+				echo'
+				<style>
+						.row.middle-xs .box,
+						.row.middle-sm .box {
+							text-align: center;
+						}						
+					@media only screen and (min-width: 48rem) { /* Styles that apply to COL-XS */ }
+					@media only screen and (min-width: 64rem) { /* Styles that apply to COL-SM */ }
+					@media only screen and (min-width: 80rem) { /* Styles that apply to COL-LG */ }
+				</style>';
+			}	
+			add_action( 'wp_footer', 'bpm___flexboxgrid_shortcode_row_style', 50 );	
+			define('bpm___flexboxgrid_shortcode_row_style___defined', TRUE);
+		}	
+		
+		
 		$a = shortcode_atts( array( 
 			'class' => '',
-			'halign' => '', // .start- , .center- , .end-
-			'valign' => '', // .top- , .middle- , .bottom- 
+			'halign' => '', 	// .start- , .center- , .end-
+			'valign' => '', 	// .top- , .middle- , .bottom- 
 			'distribute' => '', // .around- , .between- 
-			'reverse' => '', // .reverse
+			'reverse' => '', 	// .reverse
 		), $atts );
 		
 		// Class
@@ -42,7 +46,7 @@ License:
 
 		if ( isset($atts['class']) && $atts['class'] != '') {
 			$classes .= $atts['class'];
-		}
+		}	
 	
 		return '<div class="row '.$classes.'">'.do_shortcode($content).'</div>';
 
@@ -50,6 +54,25 @@ License:
 
 	add_shortcode( 'col', 'bpm_flexbox_col_shortcode' );
 	function bpm_flexbox_col_shortcode($atts, $content = null) {
+
+		
+		/**
+		 * OPTIONAL MODULE STYLE
+		 *
+		 */
+		if ( !defined('bpm___flexboxgrid_shortcode_col_style___defined') ){
+			function bpm___flexboxgrid_shortcode_col_style(){
+				echo'
+				<style>					
+					@media only screen and (min-width: 48rem) { /* Styles that apply to COL-XS */ }
+					@media only screen and (min-width: 64rem) { /* Styles that apply to COL-SM */ }
+					@media only screen and (min-width: 80rem) { /* Styles that apply to COL-LG */ }
+				</style>';
+			}	
+			add_action( 'wp_footer', 'bpm___flexboxgrid_shortcode_col_style', 50 );	
+			define('bpm___flexboxgrid_shortcode_col_style___defined', TRUE);
+		}	
+
 
 		$a = shortcode_atts( array(
 			'class' => '',
@@ -63,7 +86,7 @@ License:
 			'lg-offset' => '',
 			'reorder' => '', // .first- , .last-		
 		), $atts );
-		
+				
 		// Class
 		$classes = 'col ';
 	
@@ -74,7 +97,7 @@ License:
 				$classes .= 'col-'.$key.'-offset-'.$value.' ';	
 			} else {
 				if ( $key == 'class' ){
-					$classes .= ' '.$value;	
+					$classes .= $value.' ';	
 				}
 			}
 		}
