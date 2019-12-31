@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: FlexBox Grid Shortcode
-Description:
-Author: 
+Description: Use FlexBox Grid (flexboxgrid.com) in WordPress content areas.
+Author: Boiling Pot Media
 Version: 1.0
 License: 
 */
