@@ -27,7 +27,8 @@ Here are a few clarifying rules:
 * SM (small) is the column width rule that is applied to most medium size devices (tablets). 
 * LG (large) is the column width rule that is applied to large size devices (computer screens).
 * If no column width rule is set for LG for computer screens, the website will use the column width rule that is set for SM for computer screens.
-* Accordingly, to create a layout that has two, side by side columns on computers, but a single column on phones, you would write:
+
+Accordingly, to create a layout that has two, side by side columns on computers, but a single column on phones, you would write:
 
     [row]
     [col xs=12 sm=6]Content Left on Computer (Content Top on Phone)[/col]
