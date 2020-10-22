@@ -3,19 +3,44 @@
 Plugin Name: FlexBox Grid Shortcode
 Description: Use FlexBox Grid (flexboxgrid.com) in WordPress content areas.
 Author: Boiling Pot Media
-Version: 1.0
+Version: 2.0
 License: 
 */
+
+
+/* FlexBoxGrid_Classes_Helper
+ */	   
+function FlexBoxGrid_Classes_Helper( $atts ){
+	/* start class output with col every time */
+	$classes = 'col ';		
+	/* foreach arg */
+	foreach ($atts as $key => $value ):
+		/* if key string lenght is two, we have a col width */
+		if ( strlen($key) == 2 && $value != NULL ):				
+			/* add the col width class */
+			$classes .= 'col-'.$key.'-'.$value.' ';	
+		/* if key string lenght is nine, we have a col offset */
+		elseif ( strlen($key) == 9 && $value != NULL ):			
+			/* add the col offset */
+			$classes .= 'col-'.$key.'-'.$value.' ';					
+		/* if key string lenght neither two or nine (other), we have a class */				
+		elseif( $value != NULL ):
+			/* add the class - could be 'class' or 'reorder' */	
+			if( $key == 'class' || $key == 'reorder' ):
+				$classes .= $value.' ';
+			endif;
+		endif;			
+	endforeach;  		
+	return $classes;
+}
+
 
 class FlexBoxGrid {
 
 
-
     public function __construct( $uri = false ){
     	$this->FlexBoxGrid_Shortcodes();
-//		$this->styles( $uri );	    	
     }
-
 
 
     public function FlexBoxGrid_Shortcodes(){
@@ -24,31 +49,11 @@ class FlexBoxGrid {
     }
 
 
-
  	/* FlexBoxGrid_Classes_Constructor
 	 */	   
     public function FlexBoxGrid_Classes_Constructor( $atts ){
-		/* start class output with col every time */
-		$classes = 'col ';		
-		/* foreach arg */
-		foreach ($atts as $key => $value ):
-			/* if key string lenght is two, we have a col width */
-			if ( strlen($key) == 2 && $value != NULL ):				
-				/* add the col width class */
-				$classes .= 'col-'.$key.'-'.$value.' ';	
-			/* if key string lenght is nine, we have a col offset */
-			elseif ( strlen($key) == 9 && $value != NULL ):			
-				/* add the col offset */
-				$classes .= 'col-'.$key.'-'.$value.' ';					
-			/* if key string lenght neither two or nine (other), we have a class */				
-			elseif( $value != NULL ):
-				/* add the class - could be 'class' or 'reorder' */				
-				$classes .= $value.' ';					
-			endif;			
-		endforeach;  		
-   		return $classes;
+		return FlexBoxGrid_Classes_Helper($atts);
     }
-
 
 
  	/* FlexBoxGrid_Row_Shortcode
@@ -71,16 +76,6 @@ class FlexBoxGrid {
 			'distribute'	=> NULL, // 
 			'reverse'		=> NULL, // 	
 		), $atts );
-	
-		/* add footer scripts 
-		if ( !defined('FlexBoxGrid_Column_Shortcode__script_defined') ){
-			function FlexBoxGrid_Column_Shortcode__script(){
-				echo'<script></script>';
-			}	
-			add_action( 'wp_footer', 'FlexBoxGrid_Column_Shortcode__script' );	
-			define('FlexBoxGrid_Column_Shortcode__script_defined', TRUE);
-		}	
-		*/
 
 		/* set variables */
 		$classes  = $atts['class'] ?? '';
@@ -89,19 +84,11 @@ class FlexBoxGrid {
 		$classes .= $atts['distribute'] ?? '';
 
 		/* begin output bufffer */					
-		ob_start();	
-		?>		
-    
-			<div class="row <?php echo $classes; ?>"><?php echo do_shortcode($content); ?></div>
-
-		<?php
-		$output_string = ob_get_contents();
-		ob_end_clean();
-
-		return $output_string;    
-
+		ob_start();	?>		    
+		<div class="row <?php echo $classes; ?>"><?php echo do_shortcode($content); ?></div>
+		<?php return ob_get_clean(); ?>
+	<?php
 	}
-
 
 	
  	/* FlexBoxGrid_Column_Shortcode
@@ -134,67 +121,21 @@ class FlexBoxGrid {
 			'lg-offset'	=> NULL,
 			'reorder'	=> NULL, 			
 		), $atts );
-	
-		/* add footer scripts 
-		if ( !defined('FlexBoxGrid_Column_Shortcode__script_defined') ){
-			function FlexBoxGrid_Column_Shortcode__script(){
-				echo'<script></script>';
-			}	
-			add_action( 'wp_footer', 'FlexBoxGrid_Column_Shortcode__script' );	
-			define('FlexBoxGrid_Column_Shortcode__script_defined', TRUE);
-		}	
-		*/
 
 		/* set variables */
 		$classes = $this->FlexBoxGrid_Classes_Constructor($atts);
 
 		/* begin output bufffer */					
-		ob_start();	
-		?>
-		
-			<div class="<?php echo $classes; ?>">
-				<div class="box">
-					<?php echo do_shortcode($content); ?>
-				</div>
-			</div>		
-    
-		<?php
-		$output_string = ob_get_contents();
-		ob_end_clean();
-
-		return $output_string; 
+		ob_start();	?>
+		<div class="<?php echo $classes; ?>">
+			<div class="box">
+				<?php echo do_shortcode($content); ?>
+			</div>
+		</div>		 
+		<?php return ob_get_clean(); ?>
+	<?php
 	}
-
-
-	/*
-	private function styles( $uri = false ) {
-		ob_start();
-		?>
-		<style>
-			.row.middle-xs .box,
-			.row.middle-sm .box {
-				text-align: center;
-			}
-			@media only screen and (min-width: 48rem) {}
-			@media only screen and (min-width: 64rem) {}
-			@media only screen and (min-width: 80rem) {}		
-		</style>
-		<?php
-		$inline_styles = ob_get_clean();
-		$handle        = get_class( $this );
-
-		// only enqueue styles if they're not already enqueued.
-		if ( ! wp_style_is( $handle, 'enqueued' ) ) {
-			wp_register_style( $handle, $style_uri, array(), '1.1.1' );
-			wp_enqueue_style( $handle );
-			wp_add_inline_style( $handle, $inline_styles );
-		}
-	}
-	*/
-
-
 }
-
 
 
 new FlexBoxGrid();
