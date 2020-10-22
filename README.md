@@ -36,4 +36,31 @@ Accordingly, to create a layout that has two, side by side columns on computers,
     [/row]
 
 Other parameters and classes that will impact COL can be explored at flexboxgrid.com. 
-Review the sections: Offsets and Reordering
+
+ 	/* FlexBoxGrid_Row_Shortcode
+	 *
+	 * [row &params ]
+	 *
+	 * @ class			- (optional) 
+	 * @ halign			- (optional) start-[col], center-[col], end-[col]
+	 * @ valign			- (optional) top-[col], middle-[col], bottom-[col] 
+	 * @ distribute		- (optional) around-[col], between-[col] 
+	 * @ reverse		- (optional) reverse	
+	 */	
+	 
+	 
+ 	/* FlexBoxGrid_Column_Shortcode
+	 *
+	 * [col &params ]
+	 *
+	 * @ class		- (optional) any custom CSS class
+	 * @ xs			- (optional) such as: xs="12"
+	 * @ sm			- (optional) such as: sm="6"
+	 * @ md			- (optional) such as: md="4"
+	 * @ lg			- (optional) such as: lg="3"
+	 * @ xs-offset	- (optional) such as: xs-offset="1"
+	 * @ sm-offset	- (optional) such as: sm-offset="3"
+	 * @ md-offset	- (optional) such as: md-offset="4"
+	 * @ lg-offset	- (optional) such as: lg-offset="6"
+	 * @ reorder	- (optional) first-[col] or last-[col]
+	 */
