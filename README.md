@@ -1,6 +1,9 @@
 # bpm-flexboxgrid-shortcode
 BPM Flexbox Shortcode Plugin
 
+Required:
+* http://flexboxgrid.com/
+
 Included Shortcodes:
 
 * [row]Enter Columns[/row]
